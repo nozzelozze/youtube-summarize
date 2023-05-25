@@ -16,7 +16,7 @@ if __name__ == "__main__":
     
     while True:
         try:
-            newID = get_newest_video_id("TheUrbanRescueRanch", config)
+            newID = get_newest_video_id("TheUrbanRescueRanch", main_config)
             if currentID != newID:
                 currentID = newID
                 transcript = get_transcript(currentID)

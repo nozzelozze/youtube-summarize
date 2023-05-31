@@ -1,15 +1,20 @@
-import tweepy
+import requests
+from requests_oauthlib import OAuth1
 
-def use_bots(config, message):
+def use_bots(config, text):
     
-    # check if discord
-    
-    # check if twitter
-    if config.getboolean("TWITTER", "ENABLE"):
-        
-        auth = tweepy.OAuthHandler(config.get("TWITTER", "API_KEY"), config.get("TWITTER", "API_SECRET_KEY"))
-        auth.set_access_token(config.get("TWITTER", "ACCESS_TOKEN"), config.get("TWITTER", "ACCESS_TOKEN_SECRET"))
+    if config.getboolean('TWITTER', 'ENABLE'):
 
-        api = tweepy.API(auth)
+        API_KEY = config.get('TWITTER', 'API_KEY')
+        API_SECRET_KEY = config.get('TWITTER', 'API_SECRET_KEY')
+        ACCESS_TOKEN = config.get('TWITTER', 'ACCESS_TOKEN')
+        ACCESS_TOKEN_SECRET = config.get('TWITTER', 'ACCESS_TOKEN_SECRET')
         
-        api.update_status(message)
+        def tweet_text(text):
+            url = "https://api.twitter.com/1.1/statuses/update.json"
+            auth = OAuth1(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+            data = {"status": text}
+            response = requests.post(url, auth=auth, data=data)
+            return response.json()
+        
+        print(tweet_text(text))

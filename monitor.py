@@ -10,7 +10,10 @@ main_config.read("./configs/mainconf.ini")
 
 if __name__ == "__main__":
     
-    currentID = ""
+    transcript = get_transcript(get_newest_video_id("TheUrbanRescueRanch", main_config))
+    bot.use_bots(main_config, summarize_urban_rescue(transcript, main_config))
+    
+    """    currentID = ""
     
     while True:
         try:
@@ -23,4 +26,4 @@ if __name__ == "__main__":
                 
             time.sleep(1800) # Sleep for 1800 seconds (30 minutes)
         except Exception as e:
-            print("An error occurred:", e)
+            print("An error occurred:", e)"""

@@ -17,4 +17,4 @@ def use_bots(config, text):
             response = requests.post(url, auth=auth, json={"text": text})
             return response.json()
         
-        print(tweet_text(text))
+        tweet_text(text)

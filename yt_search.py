@@ -53,13 +53,13 @@ def youtube_search(options, config):
 
     return None
 
-def get_newest_video_id(channel_name, config):
+def get_newest_video_id(config, channel_id=None, channel_name=None):
+    if channel_id is None and channel_name is None:
+        pass     #NADOHIAOISDHAOISHDo
     try:
-        channel_id = get_channel_id_by_name(channel_name, config)
-        if channel_id:
-            video_id = youtube_search({"channelId": channel_id}, config)
-            return video_id
-        else:
-            print("Channel not found")
+        if channel_id is None:
+            channel_id = get_channel_id_by_name(channel_name, config)
+        video_id = youtube_search({"channelId": channel_id}, config)
+        return video_id
     except HttpError as e:
         print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))

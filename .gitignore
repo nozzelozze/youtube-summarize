@@ -1,2 +1,3 @@
 configs/mainconf.ini
 __pycache__/
+app.log

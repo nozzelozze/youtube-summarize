@@ -11,7 +11,7 @@ def api_call(config, _):
         temperature=0,
         n=1,
     )
-    print(response)
+    return response
 
 
 """def summarize_urban_rescue(transcript, config):

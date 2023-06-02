@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
 
 from utils import log_and_send
 
@@ -36,11 +36,16 @@ def get_transcript(video_id):
     try:
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
         log_and_send("Successfully got transcript from video with id " + video_id + ".")
-        return " ".join([segment['text'] for segment in transcript])
-    
+        return " ".join([segment['text'] for segment in transcript]), None
+    except TranscriptsDisabled as e:
+        log_and_send("Transcript is not available for video with id " + video_id + ".", e, "warning")
+        return None, e
+    except NoTranscriptFound as e:
+        log_and_send("Transcript not found for video with id " + video_id + ".", e, "warning")
+        return None, e
     except Exception as e:
         log_and_send("Error occurred in get_transcript:", e, level="ERROR")
-        raise
+        return None, e
 
 def youtube_search(options, config):
     try:

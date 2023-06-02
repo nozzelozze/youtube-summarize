@@ -1,5 +1,6 @@
 import configparser
 import json
+from youtube_transcript_api import NoTranscriptFound
 
 from yt_search import  get_latest_video_id, get_transcript
 import openai_client
@@ -30,20 +31,29 @@ def store_video_id(video_id):
         log_and_send("Failed to store video ID:", e, "error")
 
 def new_video(video_id):
-    log_and_send("Attempting to summarize new video...")
-    #transcript = get_transcript(video_id) FIXHERE
-    transcript = "This is a test transcript right now."
-    try:
-        openai_response = openai_client.api_call(main_config, transcript)
-        summarized = openai_response["choices"][0]["text"]
-        use_bots(main_config, summarized)
-        log_and_send("Successfully summarized and posted new video.")
-    except Exception as e:
-        log_and_send("Failed to summarize and post new video: ", e, "error")
+    log_and_send("Attempting to summarize new video and use bots...")
+    #transcript, error = get_transcript(video_id)
+    transcript = "This is a test transcript right now. Bombtza?!??!?! Also talk about palm trees."
+    #error = NoTranscriptFound(None,None,None)
+    error = None
+    if error is not None:
+        if type(error) is NoTranscriptFound:
+            log_and_send("get_transcript() returned NoTranscriptFound. Will retry in the next run.", level="warning")
+            store_video_id("") # makes the video appear new again for another try
+    else:
+        try:
+            openai_response = openai_client.api_call(main_config, transcript)
+            summarized = openai_response["choices"][0]["text"]
+            use_bots(main_config, summarized)
+            log_and_send("Summarized and and used bots..")
+        except Exception as e:
+            log_and_send("Failed to summarize and post new video: ", e, "error")
   
 def main():
     
     check_config.check(main_config)
+    
+    log_and_send("Config setup correctly. Starting now.")
     
     try:
         latest_video_id = get_latest_video_id(main_config, channel_id=main_config.get("YOUTUBE", "CHANNEL_ID"), channel_name=main_config.get("YOUTUBE", "CHANNEL_NAME"))
@@ -51,8 +61,10 @@ def main():
 
         if latest_video_id != stored_video_id:
             store_video_id(latest_video_id)
-            log_and_send("Stored new video ID: " + latest_video_id)
+            log_and_send("New video uploaded. Stored new video ID: " + latest_video_id)
             new_video(latest_video_id)
+        else:
+            log_and_send("No new video uploaded. Stopped.")
 
     except Exception as e:
         log_and_send("An error occurred in main", e, "error")

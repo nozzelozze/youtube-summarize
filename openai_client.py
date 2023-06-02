@@ -17,9 +17,10 @@ def api_call(config, transcript):
             n=1,
         )
         
-        cost = response["usage"]["total_tokens"] * 0.02
+        cost = (response["usage"]["total_tokens"]/1000) * 0.02
 
         log_and_send(f"Successfully made API call to OpenAI. Cost: {cost}$.")
+        log_and_send(f"OpenAI API reponse: {response}")
         
         return response
 

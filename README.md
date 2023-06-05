@@ -26,8 +26,8 @@ This project relies on a configuration file (.ini format), where you can provide
     * ACCESS_TOKEN_SECRET: Your Twitter access token secret (only necessary if ENABLE is set to TRUE).
 * [YOUTUBE]
 
-    * CHANNEL_ID: The ID of the YouTube channel you wish to monitor.
-    * CHANNEL_NAME: The name of the YouTube channel.
+    * CHANNEL_ID: The ID of the YouTube channel you wish to monitor. Either CHANNEL_ID or CHANNEL_NAME should be set.
+    * CHANNEL_NAME: The name of the YouTube channel. Either CHANNEL_ID or CHANNEL_NAME should be set.
 * [DISCORD_LOG]
 
     * WEBHOOK: Your Discord Webhook URL. If you don't want to get logs using a discord webhook, leave this as is.

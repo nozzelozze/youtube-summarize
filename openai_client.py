@@ -7,18 +7,16 @@ def api_call(config, transcript):
 
         openai.api_key = config.get("OPENAI", "API_KEY")
         prompt = config.get("PROMPT", "DESCRIPTION")
-        prompt += f"\nHere's the transcript:\n{transcript}"
-        
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=prompt,
-            max_tokens=70,
-            temperature=0,
-            n=1,
+    
+        response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": transcript}
+            ]
         )
         
-        cost = (response["usage"]["total_tokens"]/1000) * 0.02
-
+        cost = (response["usage"]["total_tokens"]/1000) * 0.002
         log_and_send(f"Successfully made API call to OpenAI. Cost: {cost}$.")
         log_and_send(f"OpenAI API reponse: {response}")
         
@@ -26,4 +24,4 @@ def api_call(config, transcript):
 
     except Exception as e:
         log_and_send("Failed to make API call to OpenAI:", e, "error")
-        raise e  # re-raise the exception so it can be handled further up the call stack
+        raise e
